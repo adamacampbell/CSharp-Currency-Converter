@@ -13,7 +13,6 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 // Use JSON
 
-
 namespace Currency_Converter
 {
     public partial class Form1 : Form
@@ -57,8 +56,23 @@ namespace Currency_Converter
                 Console.WriteLine(this.data);
                 Console.WriteLine("--------");
                 Console.WriteLine(this.data["conversion_rates"]);
-                // Update currency selection box
-                UpdateCurrencySelection();
+                // Check response wasn't an error
+                if ((string)this.data["result"] == "error")
+                {
+                    // Error when getting data
+                    string title = "Something went wrong";
+                    string message = 
+                        "A connection could not be made with the exchange API, please try again later" +
+                        "\n\nError: " +
+                        (string)this.data["extra-info"];
+                    MessageBox.Show(message, title);
+                    // Close form
+                    this.Close();
+                } else
+                {
+                    // Update currency selection box
+                    UpdateCurrencySelection();
+                }
             }
             // Close the response
             response.Close();
@@ -66,8 +80,11 @@ namespace Currency_Converter
 
         private void UpdateCurrencySelection()
         {
-                // Temp value to hold currencies
-                List<String> currencies = new List<string>();
+            // Temp value to hold currencies
+            List<String> currencies = new List<string>();
+            // Check data isn't empty
+            try
+            {
                 // Loop through each currency
                 foreach (JProperty value in this.data["conversion_rates"])
                 {
@@ -75,6 +92,9 @@ namespace Currency_Converter
                 }
                 // Update currency dropdown list values
                 currencySelectionBox.DataSource = currencies;
+            } catch {
+
+            }
         }
 
         private void currencySelectionBox_SelectedIndexChanged(object sender, EventArgs e)
