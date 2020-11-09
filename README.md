@@ -1,4 +1,4 @@
-# C-Curreny-Converter
+# C#-Curreny-Converter
 
 A very basic Windows Forms application which allows for a user to convert from GBP to any other supported currency.
 
